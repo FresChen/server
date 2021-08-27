@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gok.mapper.UserMapper">
+    <!--    添加-->
+    <insert id="addUser" keyProperty="id">
+        insert into user (name, userName, password,sex,createTime,phone)
+        value ( #{name},#{userName}, #{password},#{sex},#{createTime},#{phone})
+    </insert>
+    <!--    查找是否相同-->
+    <select id="findUserByAccount" resultType="cn.gok.entity.User">
+        select *
+        from user
+        where userName = #{userName}
+    </select>
+    <!--  忘记密码  -->
+    <update id="reset">
+        update user set password=#{password} where userName=#{userName} and phone=#{phone}
+    </update>
+
+    <!--    登入是否存在-->
+    <select id="login" resultType="cn.gok.entity.User">
+        select *
+        from user
+        where  userName = #{userName} and password = #{password}
+    </select>
+
+</mapper>
