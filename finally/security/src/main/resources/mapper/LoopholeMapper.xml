@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gok.mapper.LoopholeMapper">
+<!--    查-->
+<select id="list" resultType="cn.gok.entity.Loophole">
+select * from loophole where 1=1
+   <if test="searchKey !=null and searchKey !=''">
+     and port like CONCAT(CONCAT('%', #{searchKey}), '%')
+       or ip like CONCAT(CONCAT('%', #{searchKey}), '%')
+       or content like CONCAT(CONCAT('%', #{searchKey}), '%')
+       or type like CONCAT(CONCAT('%', #{searchKey}), '%')
+       or state like CONCAT(CONCAT('%', #{searchKey}), '%')
+   </if>
+</select>
+<!--    增-->
+    <insert id="save">
+     insert into loophole  (ip,port,content,type,state,createTime)
+          values (#{ip},#{port},#{content},#{type},'未处理',#{time})
+    </insert>
+    <!--    查找是否相同-->
+    <select id="findloophole" resultType="cn.gok.entity.Loophole">
+        select *
+        from server
+        where ip= #{ip}
+    </select>
+<!--    改-->
+    <update id="update">
+update loophole set
+            ip=#{ip},port=#{port},content=#{content},type=#{type},solveCont=#{solveCont},User=#{User},UserID=#{UserID}
+            where
+            id=#{id}
+    </update>
+<!--    删-->
+    <delete id="delete">
+delete from loophole where id=#{id}
+    </delete>
+<!--    详情-->
+    <select id="detail" resultType="cn.gok.entity.Loophole">
+select * from loophole where id=#{id}
+    </select>
+<!--    导入导出-->
+    <select id="findById" resultType="cn.gok.entity.Loophole">
+select * from loophole where id=#{id}
+    </select>
+    <select id="getloopholes" resultType="cn.gok.entity.Loophole">
+select * from loophole
+    </select>
+    <insert id="insert">
+        insert into loophole  (ip,port,content,type,state)
+        values (#{ip},#{port},#{content},#{type},'未处理')
+    </insert>
+    <update id="updateUser">
+        update loophole set User=#{User} ,UserID=(select id from user where name=#{User}) WHERE id=#{id}
+    </update>
+
+    <update id="updateState">
+        update loophole set state='处理中' where id=#{id}
+    </update>
+<!--    漏洞处理-->
+    <update id="finishState">
+        update loophole set state='已处理',solveCont=#{solveCont} where id=#{id}
+    </update>
+
+    <select id="selectState" resultType="cn.gok.entity.Loophole">
+       SELECT state,COUNT(state) as count FROM loophole GROUP BY state
+    </select>
+
+</mapper>

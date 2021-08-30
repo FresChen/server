@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gok.mapper.ServerMapper">
+    <select id="list" resultType="cn.gok.entity.Server">
+        select * from server where 1=1
+        <if test="searchKey!=null and searchKey!=''">
+            and name like CONCAT(CONCAT('%', #{searchKey}), '%')
+            or ip like CONCAT(CONCAT('%', #{searchKey}), '%')
+            or state like CONCAT(CONCAT('%', #{searchKey}), '%')
+            or mark like CONCAT(CONCAT('%', #{searchKey}), '%')
+            or user like CONCAT(CONCAT('%', #{searchKey}), '%')
+        </if>
+    </select>
+
+    <!--   新增 -->
+    <insert id="save">
+        insert into server (name,ip,state,mark,user,createTime)
+        <if test="state==-1 or state==0">
+        values (#{name},#{ip},#{state},#{mark},#{user},#{time})
+        </if>
+    </insert>
+    <select id="findServer" resultType="cn.gok.entity.Server">
+        select *
+        from server
+        where ip = #{ip}
+    </select>
+    <!--  编辑  -->
+    <update id="update">
+        update server set
+        <if test="name!=null">
+         name=#{name},ip=#{ip},state=#{state},mark=#{mark},user=#{user}
+        where
+         id=#{id}
+        </if>
+    </update>
+
+    <update id="updateName">
+
+        <if test="name!=null and oldname!=null">
+        update server set name=#{name} where name=#{oldname}
+        </if>
+    </update>
+
+    <select id="findupdate" resultType="cn.gok.entity.Server">
+        select *
+        from server
+        where ip = #{ip} and id!=#{id}
+    </select>
+    <!--    查找是否相同-->
+    <select id="find" resultType="cn.gok.entity.Server">
+        select *
+        from user
+        where userName= #{userName}
+    </select>
+    <!--  删除  -->
+    <delete id="delete">
+        delete from server where id=#{id}
+    </delete>
+    <!--    详情-->
+    <select id="detail" resultType="cn.gok.entity.Server">
+        select * from server where id=#{id}
+    </select>
+
+    <select id="selectState" resultType="cn.gok.entity.Server">
+      SELECT
+CASE
+WHEN `state`=1  THEN '服务器已启用数量'
+WHEN `state`=0  THEN '服务器停用数量'
+ END AS state1, COUNT(state) AS count
+FROM `server`
+GROUP BY `state`
+
+    </select>
+</mapper>
