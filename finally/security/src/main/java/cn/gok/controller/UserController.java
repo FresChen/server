@@ -38,7 +38,10 @@ public class UserController {
                 result= Result.error("保存失败");
             }
 
+        }else {
+            result=Result.error("此用户名已存在");
         }
+
         return result;
     }
     /**

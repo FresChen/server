@@ -6,7 +6,7 @@
     <!--    添加-->
     <insert id="addUser" keyProperty="id">
         insert into user (name, userName, password,sex,phone,createTime)
-        value ( #{name},#{userName}, #{password},#{sex},#{phone},#{createTime})
+        value ( #{name},#{userName}, #{password},#{sex},#{phone},#{time})
     </insert>
     <!--    查找是否相同-->
     <select id="findUserByAccount" resultType="cn.gok.entity.User">
